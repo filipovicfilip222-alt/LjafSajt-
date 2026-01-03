@@ -196,7 +196,7 @@ export default function Home() {
             <SocialCard
               title="Kick"
               subtitle="Uživo Stream"
-              logo="https://cdn.worldvectorlogo.com/logos/kick-3.svg"
+              logo="https://cdn.brandfetch.io/id3gkQXO6j/w/400/h/400/theme/dark/icon.jpeg?c=1bxid64Mup7aczewSAYMX&t=1752548681236"
               href="https://kick.com/ljaf"
               color="from-[#53fc18]/30 to-[#53fc18]/10"
               glowColor="rgba(83, 252, 24, 0.5)"
@@ -244,7 +244,7 @@ export default function Home() {
             <SocialCard
               title="Discord"
               subtitle="Pridruži se"
-              logo="https://cdn.prod.website-files.com/6257adef93867e50d84d30e2/636e0a6cc3c481a15a141738_icon_clyde_white_RGB.svg"
+              logo="https://static.vecteezy.com/system/resources/previews/023/741/147/non_2x/discord-logo-icon-social-media-icon-free-png.png"
               href="https://discord.com/invite/S97MbdT2cN"
               color="from-[#5865F2]/30 to-[#5865F2]/10"
               glowColor="rgba(88, 101, 242, 0.5)"
