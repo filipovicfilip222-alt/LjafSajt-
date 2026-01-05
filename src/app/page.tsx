@@ -170,103 +170,119 @@ export default function Home() {
           </motion.div>
         </motion.div>
 
-        {/* Bento Grid */}
-        <motion.div 
-          className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          {/* Featured: The Bet Buff - Telegram (Hero Card) */}
-          <motion.div variants={itemVariants} className="md:col-span-2 md:row-span-2">
-            <SocialCard
-              title="The Bet Buff"
-              subtitle="Pridruži se Telegram zajednici"
-              logo="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg"
-              href="https://t.me/thebetbuff"
-              color="from-[#0088cc]/30 to-[#0088cc]/10"
-              glowColor="rgba(0, 136, 204, 0.5)"
-              featured
-              large
-            />
-          </motion.div>
-
-          {/* Kick Streaming */}
-          <motion.div variants={itemVariants}>
-            <SocialCard
-              title="Kick"
-              subtitle="Uživo Stream"
-              logo="https://cdn.brandfetch.io/id3gkQXO6j/w/400/h/400/theme/dark/icon.jpeg?c=1bxid64Mup7aczewSAYMX&t=1752548681236"
-              href="https://kick.com/ljaf"
-              color="from-[#53fc18]/30 to-[#53fc18]/10"
-              glowColor="rgba(83, 252, 24, 0.5)"
-            />
-          </motion.div>
-
-          {/* YouTube */}
-          <motion.div variants={itemVariants}>
-            <SocialCard
-              title="YouTube"
-              subtitle="Video Sadržaj"
-              logo="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg"
-              href="https://www.youtube.com/@ljaaaf"
-              color="from-[#FF0000]/30 to-[#FF0000]/10"
-              glowColor="rgba(255, 0, 0, 0.5)"
-            />
-          </motion.div>
-
-          {/* Instagram */}
-          <motion.div variants={itemVariants}>
-            <SocialCard
-              title="Instagram"
-              subtitle="@ljaaaf"
-              logo="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png"
-              href="https://www.instagram.com/ljaaaf/"
-              color="from-[#E4405F]/30 to-[#C13584]/10"
-              glowColor="rgba(228, 64, 95, 0.5)"
-            />
-          </motion.div>
-
-          {/* TikTok */}
-          <motion.div variants={itemVariants}>
-            <SocialCard
-              title="TikTok"
-              subtitle="@ljaaaf"
-              logo="https://cdn.worldvectorlogo.com/logos/tiktok-icon-2.svg"
-              href="https://www.tiktok.com/@ljaaaf"
-              color="from-[#00f2ea]/30 to-[#ff0050]/20"
-              glowColor="rgba(0, 242, 234, 0.5)"
-            />
-          </motion.div>
-
-          {/* Discord */}
-          <motion.div variants={itemVariants}>
-            <SocialCard
-              title="Discord"
-              subtitle="Pridruži se"
-              logo="https://static.vecteezy.com/system/resources/previews/023/741/147/non_2x/discord-logo-icon-social-media-icon-free-png.png"
-              href="https://discord.com/invite/S97MbdT2cN"
-              color="from-[#5865F2]/30 to-[#5865F2]/10"
-              glowColor="rgba(88, 101, 242, 0.5)"
-            />
-          </motion.div>
-
-          {/* Twitter/X */}
-          <motion.div variants={itemVariants} className="md:col-span-2">
-            <SocialCard
-              title="X (Twitter)"
-              subtitle="Prati me za ažuriranja"
-              logo="https://upload.wikimedia.org/wikipedia/commons/c/ce/X_logo_2023.svg"
-              href="https://x.com/ljaaaf"
-              color="from-white/10 to-white/5"
-              glowColor="rgba(255, 255, 255, 0.3)"
-              wide
-            />
-          </motion.div>
-        </motion.div>
-
         {/* Partners Section */}
         <PartnersSection />
+
+        {/* Social Media Section */}
+        <motion.div
+          className="mb-8 md:mb-12"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+        >
+          <motion.div
+            className="text-center mb-8 md:mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.6 }}
+          >
+            <motion.div
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-pink-500/20 to-orange-500/20 border border-white/10 backdrop-blur-sm mb-4"
+              whileHover={{ scale: 1.05 }}
+            >
+              <Star className="w-4 h-4 text-pink-400" />
+              <span className="text-sm font-bold text-gray-300 tracking-wider">DRUŠTVENE MREŽE</span>
+              <Star className="w-4 h-4 text-orange-400" />
+            </motion.div>
+            
+            <h2 className="text-3xl md:text-5xl font-black text-white mb-3 bg-gradient-to-r from-white via-pink-200 to-orange-200 bg-clip-text text-transparent">
+              Pratite Me
+            </h2>
+            <p className="text-gray-400 text-base md:text-lg max-w-2xl mx-auto">
+              Budite u toku sa najnovijim sadržajem i obaveštenjima
+            </p>
+          </motion.div>
+
+          {/* Bento Grid */}
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            {/* Kick Streaming */}
+            <motion.div variants={itemVariants}>
+              <SocialCard
+                title="Kick"
+                subtitle="Uživo Stream"
+                logo="https://cdn.brandfetch.io/id3gkQXO6j/w/400/h/400/theme/dark/icon.jpeg?c=1bxid64Mup7aczewSAYMX&t=1752548681236"
+                href="https://kick.com/ljaf"
+                color="from-[#53fc18]/30 to-[#53fc18]/10"
+                glowColor="rgba(83, 252, 24, 0.5)"
+              />
+            </motion.div>
+
+            {/* YouTube */}
+            <motion.div variants={itemVariants}>
+              <SocialCard
+                title="YouTube"
+                subtitle="Video Sadržaj"
+                logo="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg"
+                href="https://www.youtube.com/@ljaaaf"
+                color="from-[#FF0000]/30 to-[#FF0000]/10"
+                glowColor="rgba(255, 0, 0, 0.5)"
+              />
+            </motion.div>
+
+            {/* Instagram */}
+            <motion.div variants={itemVariants}>
+              <SocialCard
+                title="Instagram"
+                subtitle="@ljaaaf"
+                logo="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png"
+                href="https://www.instagram.com/ljaaaf/"
+                color="from-[#E4405F]/30 to-[#C13584]/10"
+                glowColor="rgba(228, 64, 95, 0.5)"
+              />
+            </motion.div>
+
+            {/* TikTok */}
+            <motion.div variants={itemVariants}>
+              <SocialCard
+                title="TikTok"
+                subtitle="@ljaaaf"
+                logo="https://cdn.worldvectorlogo.com/logos/tiktok-icon-2.svg"
+                href="https://www.tiktok.com/@ljaaaf"
+                color="from-[#00f2ea]/30 to-[#ff0050]/20"
+                glowColor="rgba(0, 242, 234, 0.5)"
+              />
+            </motion.div>
+
+            {/* Discord */}
+            <motion.div variants={itemVariants}>
+              <SocialCard
+                title="Discord"
+                subtitle="Pridruži se"
+                logo="https://static.vecteezy.com/system/resources/previews/023/741/147/non_2x/discord-logo-icon-social-media-icon-free-png.png"
+                href="https://discord.com/invite/S97MbdT2cN"
+                color="from-[#5865F2]/30 to-[#5865F2]/10"
+                glowColor="rgba(88, 101, 242, 0.5)"
+              />
+            </motion.div>
+
+            {/* Twitter/X */}
+            <motion.div variants={itemVariants}>
+              <SocialCard
+                title="X (Twitter)"
+                subtitle="@ljaaaf"
+                logo="https://upload.wikimedia.org/wikipedia/commons/c/ce/X_logo_2023.svg"
+                href="https://x.com/ljaaaf"
+                color="from-white/10 to-white/5"
+                glowColor="rgba(255, 255, 255, 0.3)"
+              />
+            </motion.div>
+          </motion.div>
+        </motion.div>
 
         {/* Footer */}
         <motion.footer 
