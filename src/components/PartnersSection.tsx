@@ -35,7 +35,7 @@ export default function PartnersSection() {
     },
     {
       name: "CSGO-SKINS",
-      logo: "https://csgo-skins.com/resources/logo/x1.webp",
+      logo: "https://pbs.twimg.com/profile_images/1822763818952376320/m13mrczG_400x400.png",
       url: "https://csgo-skins.com/?ref=LJAF",
       gradient: "from-orange-500/30 via-orange-500/20 to-yellow-500/10",
       glowColor: "rgba(249, 115, 22, 0.6)",
