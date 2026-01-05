@@ -27,7 +27,7 @@ export default function PartnersSection() {
 
   const partners: Partner[] = [
     {
-      name: "BetBuff",
+      name: "TheBetBuff",
       logo: "https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg",
       url: "https://t.me/thebetbuff",
       gradient: "from-[#0088cc]/30 via-[#0088cc]/20 to-[#0088cc]/10",
