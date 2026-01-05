@@ -37,8 +37,8 @@ export default function PartnersSection() {
       name: "CSGO-SKINS",
       logo: "https://pbs.twimg.com/profile_images/1822763818952376320/m13mrczG_400x400.png",
       url: "https://csgo-skins.com/?ref=LJAF",
-      gradient: "from-orange-500/30 via-orange-500/20 to-yellow-500/10",
-      glowColor: "rgba(249, 115, 22, 0.6)",
+      gradient: "from-blue-500/30 via-blue-500/20 to-cyan-500/10",
+      glowColor: "rgba(59, 130, 246, 0.6)",
     },
     {
       name: "PIRATE SWAP",
