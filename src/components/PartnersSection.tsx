@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Sparkles, ExternalLink } from "lucide-react";
-import Image from "next/image";
+// using native <img> for external partner logos to avoid Next image optimization issues
 
 interface Partner {
   name: string;
@@ -124,11 +124,12 @@ export default function PartnersSection() {
                 whileHover={{ rotate: [0, -5, 5, 0], transition: { duration: 0.5 } }}
               >
                 <div className="relative w-24 h-24">
-                  <Image
+                  <img
                     src={partner.logo}
                     alt={`${partner.name} logo`}
-                    fill
-                    className="object-contain p-2"
+                    className="w-full h-full object-contain p-2"
+                    loading="lazy"
+                    onError={(e) => { (e.currentTarget as HTMLImageElement).src = '/fallback-logo.svg'; }}
                   />
                 </div>
                 
