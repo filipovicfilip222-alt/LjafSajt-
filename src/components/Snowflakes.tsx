@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useMemo } from "react";
+import { useMemo, useEffect, useState } from "react";
 
 const amongusImages = [
   "/amonguscovek1.png",
@@ -9,12 +9,25 @@ const amongusImages = [
 ];
 
 export default function Snowflakes() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.matchMedia("(max-width: 768px)").matches);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   const snowflakes = useMemo(() => {
-    // 60 običnih pahuljica, 10 amongus likova
-    const flakes = Array.from({ length: 70 }, (_, i) => {
+    // Drastically reduce on mobile: 20 flakes instead of 70
+    const totalFlakes = isMobile ? 20 : 70;
+    // Reduce Among Us ratio on mobile: 1 out of 10 instead of 1 out of 7
+    const flakes = Array.from({ length: totalFlakes }, (_, i) => {
       const duration = 10 + Math.random() * 10;
-      // Svaka 7. pahuljica je amongus lik
-      const isAmongus = i % 7 === 0;
+      // Adjust ratio based on device
+      const isAmongus = isMobile ? i % 10 === 0 : i % 7 === 0;
       return {
         id: i,
         left: Math.random() * 100,
@@ -26,7 +39,7 @@ export default function Snowflakes() {
       };
     });
     return flakes;
-  }, []);
+  }, [isMobile]);
 
   return (
     <div className="fixed inset-0 overflow-hidden pointer-events-none z-50">
@@ -43,17 +56,18 @@ export default function Snowflakes() {
               height: `${snowflake.size}px`,
               pointerEvents: "none",
               userSelect: "none",
+              willChange: "transform",
             }}
             initial={{
               left: "-10vw",
               opacity: 0,
-              rotate: 0, // Početna rotacija
+              rotate: 0,
             }}
             animate={{
               left: "110vw",
               opacity: [0, snowflake.opacity, snowflake.opacity, 0],
               y: Math.sin(snowflake.id) * 50,
-              rotate: -720, // <--- OVO DODAJE ROTACIJU SUPROTNO OD KAZALJKE
+              rotate: -720,
             }}
             transition={{
               duration: snowflake.duration,
@@ -74,6 +88,7 @@ export default function Snowflakes() {
               background: "rgba(255, 255, 255, 1)",
               boxShadow: `0 0 ${snowflake.size * 1.5}px rgba(255, 255, 255, ${snowflake.opacity})`,
               filter: "blur(0.5px)",
+              willChange: "transform",
             }}
             initial={{
               left: "-10vw",

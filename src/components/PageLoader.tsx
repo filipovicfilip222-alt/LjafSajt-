@@ -6,14 +6,25 @@ import Image from "next/image";
 
 export default function PageLoader() {
   const [isLoading, setIsLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    // Tajmer: 1.5 sekundi ukupno
+    const checkMobile = () => {
+      setIsMobile(window.matchMedia("(max-width: 768px)").matches);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    // Faster loader on mobile: 1s instead of 1.5s
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 1500);
-    return () => clearTimeout(timer);
-  }, []);
+    }, isMobile ? 1000 : 1500);
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("resize", checkMobile);
+    };
+  }, [isMobile]);
 
   return (
     <AnimatePresence>
@@ -21,16 +32,16 @@ export default function PageLoader() {
         <motion.div
           className="fixed inset-0 z-50 bg-[#050505] flex items-center justify-center overflow-hidden"
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
+          transition={{ duration: isMobile ? 0.3 : 0.5, ease: "easeInOut" }}
         >
           {/* POZADINA (Sada sa ZOOM efektom) */}
           <motion.div
             className="absolute inset-0"
-            initial={{ opacity: 0, scale: 1 }}   // Počinje normalne veličine
-            animate={{ opacity: 1, scale: 1.25 }} // Raste do 1.25x (Zoom In)
-            exit={{ opacity: 0, scale: 1.35 }}    // Nastavlja da raste dok nestaje
+            initial={{ opacity: 0, scale: 1 }}
+            animate={{ opacity: 1, scale: isMobile ? 1.2 : 1.25 }}
+            exit={{ opacity: 0, scale: isMobile ? 1.3 : 1.35 }}
             transition={{ 
-              duration: 1.5, // Zoom traje koliko i loader (sinhronizovano)
+              duration: isMobile ? 1 : 1.5,
               ease: "easeOut" 
             }}
           >

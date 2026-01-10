@@ -3,7 +3,7 @@
 import { motion, useMotionValue, useTransform } from "framer-motion";
 import { ArrowUpRight, Star } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface SocialCardProps {
   title: string;
@@ -29,13 +29,26 @@ export default function SocialCard({
   wide = false,
 }: SocialCardProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
-  const rotateX = useTransform(y, [-100, 100], [10, -10]);
-  const rotateY = useTransform(x, [-100, 100], [-10, 10]);
+  // Detect mobile device on mount
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.matchMedia("(max-width: 768px)").matches);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  // Only apply 3D transforms on desktop
+  const rotateX = useTransform(y, [-100, 100], isMobile ? [0, 0] : [10, -10]);
+  const rotateY = useTransform(x, [-100, 100], isMobile ? [0, 0] : [-10, 10]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (isMobile) return; // Skip 3D hover on mobile
     const rect = e.currentTarget.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
@@ -45,8 +58,10 @@ export default function SocialCard({
 
   const handleMouseLeave = () => {
     setIsHovered(false);
-    x.set(0);
-    y.set(0);
+    if (!isMobile) {
+      x.set(0);
+      y.set(0);
+    }
   };
 
   return (
@@ -59,10 +74,10 @@ export default function SocialCard({
         transition-all duration-500
         ${large ? 'min-h-[320px]' : wide ? 'min-h-[160px]' : 'min-h-[180px]'}
       `}
-      style={{
+      style={!isMobile ? {
         perspective: 1000,
         transformStyle: "preserve-3d",
-      }}
+      } : {}}
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={handleMouseLeave}
@@ -70,15 +85,15 @@ export default function SocialCard({
     >
       <motion.div
         className="relative h-full w-full"
-        style={{
+        style={!isMobile ? {
           rotateX,
           rotateY,
           transformStyle: "preserve-3d",
-        }}
-        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        } : {}}
+        transition={!isMobile ? { type: "spring", stiffness: 300, damping: 30 } : { duration: 0 }}
       >
         {/* Glass Background with Border */}
-        <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.07] to-white/[0.02] backdrop-blur-xl border border-white/10 group-hover:border-white/20 transition-all duration-500" />
+        <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.07] to-white/[0.02] ${isMobile ? 'backdrop-blur-sm' : 'backdrop-blur-xl'} border border-white/10 group-hover:border-white/20 transition-all duration-500`} />
 
         {/* Gradient Glow Background */}
         <div 

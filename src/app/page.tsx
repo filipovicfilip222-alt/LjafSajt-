@@ -7,11 +7,23 @@ import {
   Star
 } from "lucide-react";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import SocialCard from "@/components/SocialCard";
 import AnimatedBackground from "@/components/AnimatedBackground";
 import PartnersSection from "@/components/PartnersSection";
 
 export default function Home() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.matchMedia("(max-width: 768px)").matches);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -79,19 +91,19 @@ export default function Home() {
               <div className="absolute inset-[3px] rounded-full bg-black" />
             </motion.div>
             
-            {/* Pulsing Glow */}
+            {/* Pulsing Glow - Simplified on mobile */}
             <motion.div 
               className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500"
               animate={{
-                scale: [1, 1.2, 1],
-                opacity: [0.3, 0.6, 0.3],
+                scale: isMobile ? [1, 1.15, 1] : [1, 1.2, 1],
+                opacity: isMobile ? [0.2, 0.4, 0.2] : [0.3, 0.6, 0.3],
               }}
               transition={{
-                duration: 3,
+                duration: isMobile ? 4 : 3,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              style={{ filter: "blur(30px)" }}
+              style={{ filter: isMobile ? "blur(20px)" : "blur(30px)" }}
             />
             
             {/* Avatar Image */}
@@ -105,8 +117,8 @@ export default function Home() {
               />
             </div>
 
-            {/* Floating Particles */}
-            {[...Array(3)].map((_, i) => (
+            {/* Floating Particles - Disable on mobile */}
+            {!isMobile && [...Array(3)].map((_, i) => (
               <motion.div
                 key={i}
                 className="absolute w-2 h-2 rounded-full bg-gradient-to-r from-purple-400 to-cyan-400"

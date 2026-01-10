@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Sparkles, ExternalLink } from "lucide-react";
+import { useEffect, useState } from "react";
 // using native <img> for external partner logos to avoid Next image optimization issues
 
 interface Partner {
@@ -13,6 +14,17 @@ interface Partner {
 }
 
 export default function PartnersSection() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.matchMedia("(max-width: 768px)").matches);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   const containerVariants = {
     hidden: { opacity: 0, y: 30 },
     visible: {
@@ -20,7 +32,7 @@ export default function PartnersSection() {
       y: 0,
       transition: {
         duration: 0.8,
-        staggerChildren: 0.15,
+        staggerChildren: isMobile ? 0.08 : 0.15,
       },
     },
   };
@@ -97,16 +109,18 @@ export default function PartnersSection() {
             }}
             whileHover={{ y: -8, scale: 1.02, transition: { duration: 0.3 } }}
           >
-            {/* Glow Effect on Hover */}
-            <motion.div
-              className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"
-              style={{
-                background: `radial-gradient(circle at center, ${partner.glowColor}, transparent 70%)`,
-              }}
-            />
+            {/* Glow Effect on Hover - Disable on mobile */}
+            {!isMobile && (
+              <motion.div
+                className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"
+                style={{
+                  background: `radial-gradient(circle at center, ${partner.glowColor}, transparent 70%)`,
+                }}
+              />
+            )}
 
             {/* Glass Background */}
-            <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${partner.gradient} backdrop-blur-xl border border-white/10 shadow-2xl`} />
+            <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${partner.gradient} ${isMobile ? 'backdrop-blur-sm' : 'backdrop-blur-xl'} border border-white/10 ${!isMobile ? 'shadow-2xl' : 'shadow-md'}`} />
             
             {/* Animated Gradient Overlay */}
             <motion.div
