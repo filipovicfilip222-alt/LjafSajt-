@@ -7,6 +7,7 @@ const amongusImages = [
   "/amonguscovek1.png",
   "/amonguscovek2.png",
 ];
+
 export default function Snowflakes() {
   const snowflakes = useMemo(() => {
     // 60 običnih pahuljica, 10 amongus likova
@@ -46,11 +47,13 @@ export default function Snowflakes() {
             initial={{
               left: "-10vw",
               opacity: 0,
+              rotate: 0, // Početna rotacija
             }}
             animate={{
               left: "110vw",
               opacity: [0, snowflake.opacity, snowflake.opacity, 0],
               y: Math.sin(snowflake.id) * 50,
+              rotate: -720, // <--- OVO DODAJE ROTACIJU SUPROTNO OD KAZALJKE
             }}
             transition={{
               duration: snowflake.duration,
