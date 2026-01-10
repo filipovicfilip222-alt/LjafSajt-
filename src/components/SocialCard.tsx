@@ -100,22 +100,26 @@ export default function SocialCard({
           className={`absolute inset-0 bg-gradient-to-br ${color} opacity-40 group-hover:opacity-60 transition-opacity duration-500 rounded-3xl`}
         />
 
-        {/* Animated Glow Effect */}
-        <motion.div
-          className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-          style={{
-            boxShadow: `0 0 60px 10px ${glowColor}, inset 0 0 60px 5px ${glowColor}`,
-            filter: "blur(20px)",
-          }}
-        />
+        {/* Animated Glow Effect - Disable on mobile */}
+        {!isMobile && (
+          <motion.div
+            className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+            style={{
+              boxShadow: `0 0 60px 10px ${glowColor}, inset 0 0 60px 5px ${glowColor}`,
+              filter: "blur(20px)",
+            }}
+          />
+        )}
 
-        {/* Spotlight Effect */}
-        <motion.div
-          className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-          style={{
-            background: `radial-gradient(circle at ${isHovered ? '50%' : '0%'} ${isHovered ? '50%' : '0%'}, rgba(255,255,255,0.15) 0%, transparent 60%)`,
-          }}
-        />
+        {/* Spotlight Effect - Disable on mobile */}
+        {!isMobile && (
+          <motion.div
+            className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+            style={{
+              background: `radial-gradient(circle at ${isHovered ? '50%' : '0%'} ${isHovered ? '50%' : '0%'}, rgba(255,255,255,0.15) 0%, transparent 60%)`,
+            }}
+          />
+        )}
 
         {/* Featured Badge */}
         {featured && (
@@ -149,11 +153,13 @@ export default function SocialCard({
               whileHover={{ scale: 1.1, rotate: [0, -5, 5, -5, 0] }}
               transition={{ duration: 0.6 }}
             >
-              {/* Glow behind logo */}
-              <div 
-                className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"
-                style={{ backgroundColor: glowColor }}
-              />
+          {/* Glow behind logo - Disable on mobile */}
+              {!isMobile && (
+                <div 
+                  className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"
+                  style={{ backgroundColor: glowColor }}
+                />
+              )}
               <div className="relative w-full h-full p-3 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 group-hover:bg-white/15 group-hover:border-white/30 transition-all duration-300">
                 <Image
                   src={logo}
@@ -197,20 +203,22 @@ export default function SocialCard({
             </div>
           </motion.div>
 
-          {/* Shine Effect */}
-          <motion.div
-            className="absolute top-0 left-0 w-full h-full opacity-0 group-hover:opacity-100 pointer-events-none"
-            style={{
-              background: "linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%)",
-            }}
-            animate={{
-              x: isHovered ? ["-100%", "100%"] : "-100%",
-            }}
-            transition={{
-              duration: 1,
-              ease: "easeInOut",
-            }}
-          />
+          {/* Shine Effect - Disable on mobile */}
+          {!isMobile && (
+            <motion.div
+              className="absolute top-0 left-0 w-full h-full opacity-0 group-hover:opacity-100 pointer-events-none"
+              style={{
+                background: "linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%)",
+              }}
+              animate={{
+                x: isHovered ? ["-100%", "100%"] : "-100%",
+              }}
+              transition={{
+                duration: 1,
+                ease: "easeInOut",
+              }}
+            />
+          )}
         </div>
 
         {/* 3D Depth Border */}

@@ -17,7 +17,7 @@ export default function AnimatedBackground() {
 
   return (
     <div className="fixed inset-0 overflow-hidden pointer-events-none">
-      {/* Primary Gradient Orbs - Reduced on mobile, optimized with will-change */}
+      {/* Primary Gradient Orbs - Completely disabled on mobile */}
       {!isMobile && (
         <>
           <motion.div
@@ -64,8 +64,9 @@ export default function AnimatedBackground() {
         className="absolute bottom-0 left-1/3 w-[550px] h-[550px] rounded-full"
         style={{
           background: "radial-gradient(circle, rgba(236, 72, 153, 0.3) 0%, rgba(236, 72, 153, 0.1) 50%, transparent 100%)",
-          filter: isMobile ? "blur(40px)" : "blur(60px)",
+          filter: isMobile ? "blur(25px)" : "blur(60px)",
           willChange: "transform",
+          opacity: isMobile ? 0.3 : 1,
         }}
         animate={{
           x: [-100, 100, -100],
@@ -79,7 +80,7 @@ export default function AnimatedBackground() {
         }}
       />
 
-      {/* Secondary Accent Orbs - Disabled on mobile */}
+      {/* Secondary Accent Orbs - Completely disabled on mobile */}
       {!isMobile && (
         <>
           <motion.div

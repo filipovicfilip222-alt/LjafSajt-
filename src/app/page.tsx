@@ -91,19 +91,19 @@ export default function Home() {
               <div className="absolute inset-[3px] rounded-full bg-black" />
             </motion.div>
             
-            {/* Pulsing Glow - Simplified on mobile */}
+            {/* Pulsing Glow - Highly optimized on mobile */}
             <motion.div 
               className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500"
               animate={{
-                scale: isMobile ? [1, 1.15, 1] : [1, 1.2, 1],
-                opacity: isMobile ? [0.2, 0.4, 0.2] : [0.3, 0.6, 0.3],
+                scale: isMobile ? [1, 1.1, 1] : [1, 1.2, 1],
+                opacity: isMobile ? [0.1, 0.2, 0.1] : [0.3, 0.6, 0.3],
               }}
               transition={{
-                duration: isMobile ? 4 : 3,
+                duration: isMobile ? 5 : 3,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              style={{ filter: isMobile ? "blur(20px)" : "blur(30px)" }}
+              style={{ filter: isMobile ? "blur(15px)" : "blur(30px)" }}
             />
             
             {/* Avatar Image */}
@@ -210,9 +210,6 @@ export default function Home() {
             <h2 className="text-3xl md:text-5xl font-black text-white mb-3 bg-gradient-to-r from-white via-pink-200 to-orange-200 bg-clip-text text-transparent">
               Pratite Me
             </h2>
-            <p className="text-gray-400 text-base md:text-lg max-w-2xl mx-auto">
-              Budite u toku sa najnovijim sadržajem i obaveštenjima
-            </p>
           </motion.div>
 
           {/* Bento Grid */}

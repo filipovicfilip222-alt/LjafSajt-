@@ -190,17 +190,23 @@ img {
 @media (max-width: 768px) {
   /* Reduce motion for lower-end devices */
   * {
-    animation-duration: 0.5s !important;
+    animation-duration: 0.3s !important;
   }
 
-  /* Simplify blur effects on mobile */
+  /* Disable noise animation entirely on mobile */
+  .noise-bg::before {
+    animation: none !important;
+    opacity: 0.01 !important;
+  }
+
+  /* Simplify blur effects on mobile - max 4px */
   [style*="filter"] {
-    filter: blur(20px) !important;
+    filter: blur(4px) !important;
   }
 
   /* Disable expensive shadows on mobile */
-  .shadow-2xl, .shadow-lg {
-    box-shadow: none !important;
+  .shadow-2xl, .shadow-lg, .shadow-xl {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
   }
 
   /* Optimize scrolling */
@@ -211,6 +217,22 @@ img {
   /* Use GPU-accelerated transforms */
   motion-div, [data-motion] {
     transform: translateZ(0);
+  }
+
+  /* Reduce backdrop blur on mobile */
+  .backdrop-blur-xl {
+    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
+  }
+
+  .backdrop-blur-sm {
+    backdrop-filter: blur(2px) !important;
+    -webkit-backdrop-filter: blur(2px) !important;
+  }
+
+  /* Disable box-shadow animations */
+  [style*="box-shadow"] {
+    box-shadow: none !important;
   }
 }
 
@@ -223,15 +245,5 @@ img {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
-  }
-}
-
-/* Optimize backdrop filter for mobile */
-@supports (backdrop-filter: blur(1px)) {
-  @media (max-width: 768px) {
-    .backdrop-blur-xl {
-      backdrop-filter: blur(4px) !important;
-      -webkit-backdrop-filter: blur(4px) !important;
-    }
   }
 }

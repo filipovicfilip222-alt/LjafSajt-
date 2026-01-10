@@ -68,11 +68,13 @@ transition: { staggerChildren: 0.1, delayChildren: 0.2 }
 - Glassmorphism: `from-white/[0.07] to-white/[0.02]`, `border border-white/10`
 - Hover states: Increase opacity, add glow effects, scale transforms
 
-## Responsive Design Strategy
-- **Mobile-first**: Base styles for mobile, `md:` breakpoint for desktop
-- **Grid**: Mobile = stacked cards, Desktop = 3-column bento layout
+## Responsive Design & Mobile Optimization
+- **Mobile-first Tailwind**: Base classes for mobile, `md:` breakpoint for 768px+ screens
+- **Grid Layout**: Mobile = vertical stack, Desktop = 3-column bento (varies with card sizes)
 - **Avatar**: `w-36 h-36` mobile → `md:w-48 md:h-48` desktop
-- **Container**: `max-w-6xl mx-auto px-4` for safe padding
+- **Container**: `max-w-6xl mx-auto px-4` for safe padding on all sizes
+- **Runtime detection**: All animation-heavy components use `window.matchMedia("(max-width: 768px)")` to disable expensive effects (3D transforms, multiple orbs, particle count)
+- **Tailwind config**: Check responsive breakpoints in [tailwind.config.ts](tailwind.config.ts)
 
 ## Data Structures
 
@@ -105,21 +107,30 @@ interface Partner {
 ## Critical Developer Workflows
 
 ### Development
-- `npm run dev`: Starts dev server on `http://localhost:3000`
-- Changes hot-reload automatically (Next.js fast refresh)
-- Check TypeScript errors: `npm run lint` (uses ESLint via Next.js)
+- `npm run dev`: Starts dev server on `http://localhost:3000` with hot-reload
+- Changes trigger fast refresh automatically (no full page reload needed)
+- Check TypeScript errors: `npm run lint`
+- Test responsiveness: Check both `md:` breakpoint behavior (tablet/desktop)
 
 ### Building & Deployment
-- `npm run build`: Produces optimized Next.js build
-- `npm start`: Runs production server (verify before deploy)
-- No environment variables required currently
+- `npm run build`: Produces optimized Next.js build (checks for TS errors)
+- `npm start`: Runs production server locally (verify animations/perf before deploy)
+- Vercel Analytics enabled automatically via `@vercel/analytics` import
+- No environment variables required
 
 ### Adding New Social Cards
 1. Import `SocialCard` in [page.tsx](src/app/page.tsx)
-2. Create card data with required props
-3. Render within motion container with itemVariants
-4. Ensure `color` uses valid Tailwind gradient classes
-5. `glowColor` should be `rgba()` format for consistency
+2. Create card data object matching `SocialCardProps` interface
+3. Render as `<motion.div variants={itemVariants}>` child inside containerVariants parent
+4. **Color**: Must be valid Tailwind gradient class like `"from-purple-600 to-pink-600"`
+5. **GlowColor**: Use `rgba()` format (e.g., `"rgba(139, 92, 246, 0.6)"` for purple)
+6. Omit `featured`, `large`, `wide` props for normal grid size (defaults to `false`)
+
+### Mobile Testing Critical
+- Components detect viewport with `window.matchMedia("(max-width: 768px)")`
+- AnimatedBackground: Disables expensive secondary orbs on mobile
+- Snowflakes: Reduces from 70 to 20 flakes, Among Us ratio 1:10 instead of 1:7
+- SocialCard: Disables 3D `rotateX`/`rotateY` transforms on mobile
 
 ## Important Implementation Details
 

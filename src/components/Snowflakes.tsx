@@ -21,13 +21,13 @@ export default function Snowflakes() {
   }, []);
 
   const snowflakes = useMemo(() => {
-    // Drastically reduce on mobile: 20 flakes instead of 70
-    const totalFlakes = isMobile ? 20 : 70;
-    // Reduce Among Us ratio on mobile: 1 out of 10 instead of 1 out of 7
+    // Ultra-reduce on mobile: 10 flakes instead of 20 (85% reduction from desktop)
+    const totalFlakes = isMobile ? 10 : 70;
+    // Reduce Among Us ratio on mobile: 1 out of 15 instead of 1 out of 7
     const flakes = Array.from({ length: totalFlakes }, (_, i) => {
       const duration = 10 + Math.random() * 10;
       // Adjust ratio based on device
-      const isAmongus = isMobile ? i % 10 === 0 : i % 7 === 0;
+      const isAmongus = isMobile ? i % 15 === 0 : i % 7 === 0;
       return {
         id: i,
         left: Math.random() * 100,
@@ -67,7 +67,7 @@ export default function Snowflakes() {
               left: "110vw",
               opacity: [0, snowflake.opacity, snowflake.opacity, 0],
               y: Math.sin(snowflake.id) * 50,
-              rotate: -720,
+              rotate: isMobile ? 0 : -720,
             }}
             transition={{
               duration: snowflake.duration,

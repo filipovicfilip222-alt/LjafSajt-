@@ -31,8 +31,8 @@ export default function PartnersSection() {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.8,
-        staggerChildren: isMobile ? 0.08 : 0.15,
+        duration: isMobile ? 0.5 : 0.8,
+        staggerChildren: isMobile ? 0.05 : 0.15,
       },
     },
   };
@@ -82,9 +82,6 @@ export default function PartnersSection() {
         <h2 className="text-3xl md:text-5xl font-black text-white mb-3 bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
           Naši Partneri
         </h2>
-        <p className="text-gray-400 text-base md:text-lg max-w-2xl mx-auto">
-          Ponosno sarađujemo sa vodećim brendovima u industriji
-        </p>
       </div>
 
       {/* Partners Grid */}
@@ -122,20 +119,22 @@ export default function PartnersSection() {
             {/* Glass Background */}
             <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${partner.gradient} ${isMobile ? 'backdrop-blur-sm' : 'backdrop-blur-xl'} border border-white/10 ${!isMobile ? 'shadow-2xl' : 'shadow-md'}`} />
             
-            {/* Animated Gradient Overlay */}
-            <motion.div
-              className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-              style={{
-                background: `linear-gradient(135deg, transparent 0%, ${partner.glowColor} 50%, transparent 100%)`,
-              }}
-            />
+            {/* Animated Gradient Overlay - Disable on mobile */}
+            {!isMobile && (
+              <motion.div
+                className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                style={{
+                  background: `linear-gradient(135deg, transparent 0%, ${partner.glowColor} 50%, transparent 100%)`,
+                }}
+              />
+            )}
 
             {/* Content */}
             <div className="relative h-full p-8 flex flex-col items-center justify-center text-center">
               {/* Logo Container */}
               <motion.div
                 className="relative w-32 h-32 mb-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 flex items-center justify-center overflow-hidden"
-                whileHover={{ rotate: [0, -5, 5, 0], transition: { duration: 0.5 } }}
+                whileHover={!isMobile ? { rotate: [0, -5, 5, 0], transition: { duration: 0.5 } } : {}}
               >
                 <div className="relative w-24 h-24">
                   <img
@@ -147,19 +146,21 @@ export default function PartnersSection() {
                   />
                 </div>
                 
-                {/* Shimmer Effect */}
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                  animate={{
-                    x: ["-100%", "200%"],
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    repeatDelay: 2,
-                    ease: "easeInOut",
-                  }}
-                />
+                {/* Shimmer Effect - Disable on mobile */}
+                {!isMobile && (
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                    animate={{
+                      x: ["-100%", "200%"],
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      repeatDelay: 2,
+                      ease: "easeInOut",
+                    }}
+                  />
+                )}
               </motion.div>
               
               {/* Partner Name */}
@@ -177,15 +178,21 @@ export default function PartnersSection() {
               </motion.div>
             </div>
 
-            {/* Corner Accent */}
-            <div className="absolute top-4 right-4 w-12 h-12 rounded-full bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-md" />
-            <div className="absolute bottom-4 left-4 w-12 h-12 rounded-full bg-gradient-to-tr from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-md" />
+            {/* Corner Accent - Disable on mobile */}
+            {!isMobile && (
+              <>
+                <div className="absolute top-4 right-4 w-12 h-12 rounded-full bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-md" />
+                <div className="absolute bottom-4 left-4 w-12 h-12 rounded-full bg-gradient-to-tr from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-md" />
+              </>
+            )}
           </motion.a>
         ))}
       </motion.div>
 
-      {/* Decorative Background Glow */}
-      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 w-[600px] h-[600px] bg-gradient-to-r from-purple-500/10 to-cyan-500/10 rounded-full blur-[120px] opacity-30 pointer-events-none" />
+      {/* Decorative Background Glow - Disable on mobile */}
+      {!isMobile && (
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 w-[600px] h-[600px] bg-gradient-to-r from-purple-500/10 to-cyan-500/10 rounded-full blur-[120px] opacity-30 pointer-events-none" />
+      )}
     </motion.section>
   );
 }
