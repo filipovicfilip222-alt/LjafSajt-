@@ -173,11 +173,11 @@ export default function Home() {
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              <Sparkles className="w-5 h-5 text-purple-400 animate-pulse" />
+              <Sparkles className={`w-5 h-5 text-purple-400 ${!isMobile ? 'animate-pulse' : ''}`} />
               <span className="text-lg md:text-xl font-bold text-gray-200">
                 Content Creator | Streamer
               </span>
-              <Sparkles className="w-5 h-5 text-cyan-400 animate-pulse" />
+              <Sparkles className={`w-5 h-5 text-cyan-400 ${!isMobile ? 'animate-pulse' : ''}`} />
             </motion.div>
           </motion.div>
         </motion.div>

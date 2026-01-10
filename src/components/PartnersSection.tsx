@@ -170,11 +170,35 @@ export default function PartnersSection() {
 
               {/* Visit Button */}
               <motion.div
-                className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 text-gray-200 text-sm font-semibold group-hover:bg-white/20 transition-colors duration-300"
-                whileHover={{ scale: 1.05 }}
+                className={`relative flex items-center gap-2 px-6 py-3 rounded-full font-bold text-sm tracking-wide overflow-hidden group/btn transition-all duration-300 ${
+                  partner.name === "TheBetBuff"
+                    ? "bg-gradient-to-r from-cyan-500 to-blue-500 text-white border border-cyan-400/50 shadow-lg shadow-cyan-500/30"
+                    : "bg-gradient-to-r from-purple-500 to-pink-500 text-white border border-purple-400/50 shadow-lg shadow-purple-500/30"
+                }`}
+                whileHover={{ 
+                  scale: 1.08,
+                  boxShadow: partner.name === "TheBetBuff" 
+                    ? "0 0 30px rgba(34, 211, 238, 0.6)"
+                    : "0 0 30px rgba(168, 85, 247, 0.6)"
+                }}
+                whileTap={{ scale: 0.95 }}
               >
-                <span>Posetite sajt</span>
-                <ExternalLink className="w-4 h-4" />
+                {/* Shimmer Effect */}
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                  animate={{
+                    x: ["-100%", "200%"],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatDelay: 1.5,
+                  }}
+                />
+                <span className="relative flex items-center gap-2">
+                  {partner.name === "TheBetBuff" ? "PRIDRUŽI SE" : "CLAIM"}
+                  <ExternalLink className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                </span>
               </motion.div>
             </div>
 
