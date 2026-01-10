@@ -1,0 +1,39 @@
+# BEGIN SEO Optimizations
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+    
+    # Redirect HTTP to HTTPS
+    RewriteCond %{HTTPS} off
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+    
+    # Redirect www to non-www
+    RewriteCond %{HTTP_HOST} ^www\.ljaf\.rs$ [NC]
+    RewriteRule ^(.*)$ https://ljaf.rs/$1 [R=301,L]
+    
+    # Remove trailing slashes
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.+)/$ https://ljaf.rs/$1 [R=301,L]
+</IfModule>
+# END SEO Optimizations
+
+# Browser Caching
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpeg "access 1 year"
+    ExpiresByType image/gif "access 1 year"
+    ExpiresByType image/png "access 1 year"
+    ExpiresByType text/css "access 1 month"
+    ExpiresByType text/javascript "access 1 month"
+    ExpiresByType application/javascript "access 1 month"
+</IfModule>
+
+# Gzip Compression
+<IfModule mod_gzip.c>
+    mod_gzip_on On
+    mod_gzip_dechunk On
+    mod_gzip_item_include file .(html|txt|xml|php|js|css|svg|jpg|png|gif)$
+    mod_gzip_item_include handler ^cgi-script$
+    mod_gzip_item_exclude rspheader ^Content-Encoding:.*gzip
+    mod_gzip_item_exclude mime ^image/
+</IfModule>

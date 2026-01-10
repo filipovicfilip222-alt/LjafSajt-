@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /.next/
+Disallow: /api/
+
+Sitemap: https://ljaf.rs/sitemap.xml
+
+# Ljaf - Veljko Karanović Content Creator & Streamer
+# Keywords: ljaf, veljko karanovic, ljatif, baka prase, streamer, content creator, gaming, entertainment
