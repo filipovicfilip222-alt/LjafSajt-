@@ -1,61 +1,94 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { memo } from "react";
+import { useMobile } from "@/hooks/useMobile";
 
-export default function AnimatedBackground() {
-  const [isMobile, setIsMobile] = useState(false);
+// Static animation configs - prevents recreation on every render
+const orbTransitions = {
+  purple: { duration: 20, repeat: Infinity, ease: "easeInOut" } as const,
+  cyan: { duration: 25, repeat: Infinity, ease: "easeInOut" } as const,
+  pink: { duration: 30, repeat: Infinity, ease: "easeInOut" } as const,
+  yellow: { duration: 18, repeat: Infinity, ease: "easeInOut" } as const,
+  green: { duration: 22, repeat: Infinity, ease: "easeInOut" } as const,
+  spotlight: { duration: 8, repeat: Infinity, ease: "easeInOut" } as const,
+  scanline: { duration: 8, repeat: Infinity, ease: "linear" } as const,
+};
 
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.matchMedia("(max-width: 768px)").matches);
-    };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
+const orbAnimations = {
+  purple: { x: [0, 150, 0], y: [0, 100, 0], scale: [1, 1.2, 1] },
+  cyan: { x: [0, -120, 0], y: [0, 150, 0], scale: [1, 1.3, 1] },
+  pink: { x: [-100, 100, -100], y: [0, -80, 0], scale: [1, 1.2, 1] },
+  yellow: { x: [0, 80, 0], y: [0, -60, 0], opacity: [0.3, 0.6, 0.3] },
+  green: { x: [0, -70, 0], y: [0, 90, 0], opacity: [0.4, 0.7, 0.4] },
+  spotlight: { scale: [1, 1.1, 1], opacity: [0.5, 0.8, 0.5] },
+  scanline: { y: [0, 20, 0] },
+};
+
+// Static styles to avoid inline object recreation
+const orbStyles = {
+  purple: {
+    background: "radial-gradient(circle, rgba(139, 92, 246, 0.4) 0%, rgba(139, 92, 246, 0.1) 50%, transparent 100%)",
+    filter: "blur(60px)",
+    willChange: "transform",
+  },
+  cyan: {
+    background: "radial-gradient(circle, rgba(6, 182, 212, 0.4) 0%, rgba(6, 182, 212, 0.1) 50%, transparent 100%)",
+    filter: "blur(60px)",
+    willChange: "transform",
+  },
+  yellow: {
+    background: "radial-gradient(circle, rgba(251, 191, 36, 0.2) 0%, transparent 70%)",
+    filter: "blur(80px)",
+    willChange: "transform",
+  },
+  green: {
+    background: "radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, transparent 70%)",
+    filter: "blur(70px)",
+    willChange: "transform",
+  },
+  spotlight: {
+    background: "radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 70%)",
+    filter: "blur(40px)",
+    willChange: "transform",
+  },
+};
+
+const gridStyle = {
+  backgroundImage: `
+    linear-gradient(rgba(139, 92, 246, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139, 92, 246, 0.05) 1px, transparent 1px)
+  `,
+  backgroundSize: "80px 80px",
+  maskImage: "radial-gradient(ellipse 80% 60% at 50% 50%, black 0%, transparent 100%)",
+  WebkitMaskImage: "radial-gradient(ellipse 80% 60% at 50% 50%, black 0%, transparent 100%)",
+  contain: "layout style paint",
+} as const;
+
+const scanlineStyle = {
+  backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, white 2px, white 4px)",
+};
+
+function AnimatedBackground() {
+  const isMobile = useMobile();
 
   return (
-    <div className="fixed inset-0 overflow-hidden pointer-events-none">
+    <div className="fixed inset-0 overflow-hidden pointer-events-none" style={{ contain: "strict" }}>
       {/* Primary Gradient Orbs - Completely disabled on mobile */}
       {!isMobile && (
         <>
           <motion.div
             className="absolute -top-20 -left-20 w-[600px] h-[600px] rounded-full"
-            style={{
-              background: "radial-gradient(circle, rgba(139, 92, 246, 0.4) 0%, rgba(139, 92, 246, 0.1) 50%, transparent 100%)",
-              filter: "blur(60px)",
-              willChange: "transform",
-            }}
-            animate={{
-              x: [0, 150, 0],
-              y: [0, 100, 0],
-              scale: [1, 1.2, 1],
-            }}
-            transition={{
-              duration: 20,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
+            style={orbStyles.purple}
+            animate={orbAnimations.purple}
+            transition={orbTransitions.purple}
           />
           
           <motion.div
             className="absolute top-40 -right-20 w-[500px] h-[500px] rounded-full"
-            style={{
-              background: "radial-gradient(circle, rgba(6, 182, 212, 0.4) 0%, rgba(6, 182, 212, 0.1) 50%, transparent 100%)",
-              filter: "blur(60px)",
-              willChange: "transform",
-            }}
-            animate={{
-              x: [0, -120, 0],
-              y: [0, 150, 0],
-              scale: [1, 1.3, 1],
-            }}
-            transition={{
-              duration: 25,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
+            style={orbStyles.cyan}
+            animate={orbAnimations.cyan}
+            transition={orbTransitions.cyan}
           />
         </>
       )}
@@ -68,16 +101,8 @@ export default function AnimatedBackground() {
           willChange: "transform",
           opacity: isMobile ? 0.3 : 1,
         }}
-        animate={{
-          x: [-100, 100, -100],
-          y: [0, -80, 0],
-          scale: [1, 1.2, 1],
-        }}
-        transition={{
-          duration: 30,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
+        animate={orbAnimations.pink}
+        transition={orbTransitions.pink}
       />
 
       {/* Secondary Accent Orbs - Completely disabled on mobile */}
@@ -85,40 +110,16 @@ export default function AnimatedBackground() {
         <>
           <motion.div
             className="absolute top-1/2 left-1/4 w-[400px] h-[400px] rounded-full"
-            style={{
-              background: "radial-gradient(circle, rgba(251, 191, 36, 0.2) 0%, transparent 70%)",
-              filter: "blur(80px)",
-              willChange: "transform",
-            }}
-            animate={{
-              x: [0, 80, 0],
-              y: [0, -60, 0],
-              opacity: [0.3, 0.6, 0.3],
-            }}
-            transition={{
-              duration: 18,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
+            style={orbStyles.yellow}
+            animate={orbAnimations.yellow}
+            transition={orbTransitions.yellow}
           />
 
           <motion.div
             className="absolute bottom-1/4 right-1/4 w-[450px] h-[450px] rounded-full"
-            style={{
-              background: "radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, transparent 70%)",
-              filter: "blur(70px)",
-              willChange: "transform",
-            }}
-            animate={{
-              x: [0, -70, 0],
-              y: [0, 90, 0],
-              opacity: [0.4, 0.7, 0.4],
-            }}
-            transition={{
-              duration: 22,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
+            style={orbStyles.green}
+            animate={orbAnimations.green}
+            transition={orbTransitions.green}
           />
         </>
       )}
@@ -126,36 +127,16 @@ export default function AnimatedBackground() {
       {/* Grid Pattern - Enhanced */}
       <div 
         className={`absolute inset-0 ${isMobile ? "opacity-0" : "opacity-20"}`}
-        style={{
-          backgroundImage: `
-            linear-gradient(rgba(139, 92, 246, 0.05) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(139, 92, 246, 0.05) 1px, transparent 1px)
-          `,
-          backgroundSize: "80px 80px",
-          maskImage: "radial-gradient(ellipse 80% 60% at 50% 50%, black 0%, transparent 100%)",
-          WebkitMaskImage: "radial-gradient(ellipse 80% 60% at 50% 50%, black 0%, transparent 100%)",
-          contain: "layout style paint",
-        }}
+        style={gridStyle}
       />
 
       {/* Spotlight Effect */}
       {!isMobile && (
         <motion.div
           className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px]"
-          style={{
-            background: "radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 70%)",
-            filter: "blur(40px)",
-            willChange: "transform",
-          }}
-          animate={{
-            scale: [1, 1.1, 1],
-            opacity: [0.5, 0.8, 0.5],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
+          style={orbStyles.spotlight}
+          animate={orbAnimations.spotlight}
+          transition={orbTransitions.spotlight}
         />
       )}
       
@@ -166,20 +147,13 @@ export default function AnimatedBackground() {
       {!isMobile && (
         <motion.div
           className="absolute inset-0 opacity-[0.02]"
-          style={{
-            backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, white 2px, white 4px)",
-          }}
-          animate={{
-            y: [0, 20, 0],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "linear",
-          }}
+          style={scanlineStyle}
+          animate={orbAnimations.scanline}
+          transition={orbTransitions.scanline}
         />
       )}
     </div>
   );
 }
 
+export default memo(AnimatedBackground);

@@ -3,7 +3,8 @@
 import { motion, useMotionValue, useTransform } from "framer-motion";
 import { ArrowUpRight, Star } from "lucide-react";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useCallback, memo } from "react";
+import { useMobile } from "@/hooks/useMobile";
 
 interface SocialCardProps {
   title: string;
@@ -17,7 +18,14 @@ interface SocialCardProps {
   wide?: boolean;
 }
 
-export default function SocialCard({
+// Static transition objects - prevents recreation on every render
+const springTransition = { type: "spring", stiffness: 300, damping: 30 } as const;
+const noTransition = { duration: 0 } as const;
+const hoverTransition = { duration: 0.3 } as const;
+const featuredBadgeTransition = { delay: 0.4, type: "spring", stiffness: 200 } as const;
+const logoHoverTransition = { duration: 0.6 } as const;
+
+function SocialCard({
   title,
   subtitle,
   logo,
@@ -29,40 +37,32 @@ export default function SocialCard({
   wide = false,
 }: SocialCardProps) {
   const [isHovered, setIsHovered] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useMobile();
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-
-  // Detect mobile device on mount
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.matchMedia("(max-width: 768px)").matches);
-    };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
 
   // Only apply 3D transforms on desktop
   const rotateX = useTransform(y, [-100, 100], isMobile ? [0, 0] : [10, -10]);
   const rotateY = useTransform(x, [-100, 100], isMobile ? [0, 0] : [-10, 10]);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (isMobile) return; // Skip 3D hover on mobile
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (isMobile) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
     x.set(e.clientX - centerX);
     y.set(e.clientY - centerY);
-  };
+  }, [isMobile, x, y]);
 
-  const handleMouseLeave = () => {
+  const handleMouseEnter = useCallback(() => setIsHovered(true), []);
+
+  const handleMouseLeave = useCallback(() => {
     setIsHovered(false);
     if (!isMobile) {
       x.set(0);
       y.set(0);
     }
-  };
+  }, [isMobile, x, y]);
 
   return (
     <motion.a
@@ -79,7 +79,7 @@ export default function SocialCard({
         transformStyle: "preserve-3d",
       } : {}}
       onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsHovered(true)}
+      onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       whileTap={{ scale: 0.98 }}
     >
@@ -89,8 +89,8 @@ export default function SocialCard({
           rotateX,
           rotateY,
           transformStyle: "preserve-3d",
-        } : {}}
-        transition={!isMobile ? { type: "spring", stiffness: 300, damping: 30 } : { duration: 0 }}
+        } : undefined}
+        transition={!isMobile ? springTransition : noTransition}
       >
         {/* Glass Background with Border */}
         <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.07] to-white/[0.02] ${isMobile ? 'backdrop-blur-sm' : 'backdrop-blur-xl'} border border-white/10 group-hover:border-white/20 transition-all duration-500`} />
@@ -127,7 +127,7 @@ export default function SocialCard({
             className="absolute top-5 right-5 z-20 flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-yellow-500/30 to-amber-500/30 border border-yellow-400/50 backdrop-blur-md shadow-lg"
             initial={{ scale: 0, rotate: -180 }}
             animate={{ scale: 1, rotate: 0 }}
-            transition={{ delay: 0.4, type: "spring", stiffness: 200 }}
+            transition={featuredBadgeTransition}
             whileHover={{ scale: 1.05 }}
           >
             <Star className="w-4 h-4 text-yellow-300 fill-yellow-300 drop-shadow-lg" />
@@ -146,12 +146,12 @@ export default function SocialCard({
             animate={{
               y: isHovered ? -5 : 0,
             }}
-            transition={{ duration: 0.3 }}
+            transition={hoverTransition}
           >
             <motion.div
               className="relative w-16 h-16 md:w-20 md:h-20"
               whileHover={{ scale: 1.1, rotate: [0, -5, 5, -5, 0] }}
-              transition={{ duration: 0.6 }}
+              transition={logoHoverTransition}
             >
           {/* Glow behind logo - Disable on mobile */}
               {!isMobile && (
@@ -178,7 +178,7 @@ export default function SocialCard({
             animate={{
               y: isHovered ? -3 : 0,
             }}
-            transition={{ duration: 0.3 }}
+            transition={hoverTransition}
           >
             <h3 className="text-2xl md:text-4xl font-black text-white mb-2 drop-shadow-lg tracking-tight">
               {title}
@@ -196,7 +196,7 @@ export default function SocialCard({
               x: isHovered ? 4 : 0,
               y: isHovered ? -4 : 0,
             }}
-            transition={{ duration: 0.3 }}
+            transition={hoverTransition}
           >
             <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
               <ArrowUpRight className="w-5 h-5 text-white" />
@@ -229,3 +229,4 @@ export default function SocialCard({
   );
 }
 
+export default memo(SocialCard);

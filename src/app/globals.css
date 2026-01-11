@@ -80,6 +80,29 @@ body {
   50% { transform: translateY(-20px); }
 }
 
+/* Among Us fly across animation - GPU accelerated */
+@keyframes fly-across {
+  0% {
+    transform: translateX(-100px) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(calc(100vw + 100px)) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+.animate-fly-across {
+  left: 0;
+  animation: fly-across 5s linear forwards;
+}
+
 /* Performance containment for expensive elements */
 .fixed {
   contain: layout style paint;

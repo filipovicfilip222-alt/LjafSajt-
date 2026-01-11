@@ -2,7 +2,8 @@
 
 import { motion } from "framer-motion";
 import { Sparkles, ExternalLink } from "lucide-react";
-import { useEffect, useState } from "react";
+import { memo, useMemo } from "react";
+import { useMobile } from "@/hooks/useMobile";
 // using native <img> for external partner logos to avoid Next image optimization issues
 
 interface Partner {
@@ -13,19 +14,42 @@ interface Partner {
   glowColor: string;
 }
 
-export default function PartnersSection() {
-  const [isMobile, setIsMobile] = useState(false);
+// Static data - prevents recreation on every render
+const partners: Partner[] = [
+  {
+    name: "TheBetBuff",
+    logo: "https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg",
+    url: "https://t.me/thebetbuff",
+    gradient: "from-[#0088cc]/30 via-[#0088cc]/20 to-[#0088cc]/10",
+    glowColor: "rgba(0, 136, 204, 0.6)",
+  },
+  {
+    name: "CSGO-SKINS",
+    logo: "https://pbs.twimg.com/profile_images/1822763818952376320/m13mrczG_400x400.png",
+    url: "https://csgo-skins.com/?ref=LJAF",
+    gradient: "from-blue-500/30 via-blue-500/20 to-cyan-500/10",
+    glowColor: "rgba(59, 130, 246, 0.6)",
+  },
+  {
+    name: "PIRATE SWAP",
+    logo: "https://static.totalcsgo.com/small_logo_f9dc26c029.png",
+    url: "https://pirateswap.com/?ref=ljaf",
+    gradient: "from-purple-500/30 via-pink-500/20 to-purple-500/10",
+    glowColor: "rgba(168, 85, 247, 0.6)",
+  },
+];
 
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.matchMedia("(max-width: 768px)").matches);
-    };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
+// Static animation configs
+const shimmerAnimation = { x: ["-100%", "200%"] };
+const shimmerTransition = { duration: 3, repeat: Infinity, repeatDelay: 2, ease: "easeInOut" } as const;
+const buttonShimmerTransition = { duration: 2, repeat: Infinity, repeatDelay: 1.5 } as const;
+const hoverTransition = { duration: 0.3 } as const;
+const logoHoverAnimation = { rotate: [0, -5, 5, 0], transition: { duration: 0.5 } };
 
-  const containerVariants = {
+function PartnersSection() {
+  const isMobile = useMobile();
+
+  const containerVariants = useMemo(() => ({
     hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
@@ -35,31 +59,7 @@ export default function PartnersSection() {
         staggerChildren: isMobile ? 0.05 : 0.15,
       },
     },
-  };
-
-  const partners: Partner[] = [
-    {
-      name: "TheBetBuff",
-      logo: "https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg",
-      url: "https://t.me/thebetbuff",
-      gradient: "from-[#0088cc]/30 via-[#0088cc]/20 to-[#0088cc]/10",
-      glowColor: "rgba(0, 136, 204, 0.6)",
-    },
-    {
-      name: "CSGO-SKINS",
-      logo: "https://pbs.twimg.com/profile_images/1822763818952376320/m13mrczG_400x400.png",
-      url: "https://csgo-skins.com/?ref=LJAF",
-      gradient: "from-blue-500/30 via-blue-500/20 to-cyan-500/10",
-      glowColor: "rgba(59, 130, 246, 0.6)",
-    },
-    {
-      name: "PIRATE SWAP",
-      logo: "https://static.totalcsgo.com/small_logo_f9dc26c029.png",
-      url: "https://pirateswap.com/?ref=ljaf",
-      gradient: "from-purple-500/30 via-pink-500/20 to-purple-500/10",
-      glowColor: "rgba(168, 85, 247, 0.6)",
-    },
-  ];
+  }), [isMobile]);
 
   return (
     <motion.section 
@@ -104,7 +104,7 @@ export default function PartnersSection() {
                 transition: { delay: index * 0.15 }
               },
             }}
-            whileHover={{ y: -8, scale: 1.02, transition: { duration: 0.3 } }}
+            whileHover={{ y: -8, scale: 1.02, transition: hoverTransition }}
           >
             {/* Glow Effect on Hover - Disable on mobile */}
             {!isMobile && (
@@ -134,7 +134,7 @@ export default function PartnersSection() {
               {/* Logo Container */}
               <motion.div
                 className="relative w-32 h-32 mb-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 flex items-center justify-center overflow-hidden"
-                whileHover={!isMobile ? { rotate: [0, -5, 5, 0], transition: { duration: 0.5 } } : {}}
+                whileHover={!isMobile ? logoHoverAnimation : undefined}
               >
                 <div className="relative w-24 h-24">
                   <img
@@ -150,15 +150,8 @@ export default function PartnersSection() {
                 {!isMobile && (
                   <motion.div
                     className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                    animate={{
-                      x: ["-100%", "200%"],
-                    }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      repeatDelay: 2,
-                      ease: "easeInOut",
-                    }}
+                    animate={shimmerAnimation}
+                    transition={shimmerTransition}
                   />
                 )}
               </motion.div>
@@ -186,14 +179,8 @@ export default function PartnersSection() {
                 {/* Shimmer Effect */}
                 <motion.div
                   className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
-                  animate={{
-                    x: ["-100%", "200%"],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    repeatDelay: 1.5,
-                  }}
+                  animate={shimmerAnimation}
+                  transition={buttonShimmerTransition}
                 />
                 <span className="relative flex items-center gap-2">
                   {partner.name === "TheBetBuff" ? "PRIDRUŽI SE" : "CLAIM"}
@@ -221,3 +208,4 @@ export default function PartnersSection() {
   );
 }
 
+export default memo(PartnersSection);
