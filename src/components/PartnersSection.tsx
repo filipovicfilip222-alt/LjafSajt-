@@ -8,6 +8,7 @@ import { useMobile } from "@/hooks/useMobile";
 
 interface Partner {
   name: string;
+  description: string;
   logo: string;
   url: string;
   gradient: string;
@@ -18,6 +19,7 @@ interface Partner {
 const partners: Partner[] = [
   {
     name: "TheBetBuff",
+    description: "Potpuno BESPLATNA grupa za tipovanje sportskih događaja",
     logo: "https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg",
     url: "https://t.me/thebetbuff",
     gradient: "from-[#0088cc]/30 via-[#0088cc]/20 to-[#0088cc]/10",
@@ -25,6 +27,7 @@ const partners: Partner[] = [
   },
   {
     name: "CSGO-SKINS",
+    description: "Besplatnih $0.50 za početak i +10% bonus na depozit",
     logo: "https://pbs.twimg.com/profile_images/1822763818952376320/m13mrczG_400x400.png",
     url: "https://csgo-skins.com/?ref=LJAF",
     gradient: "from-blue-500/30 via-blue-500/20 to-cyan-500/10",
@@ -32,6 +35,7 @@ const partners: Partner[] = [
   },
   {
     name: "PIRATE SWAP",
+    description: "Na SVAKI depozit dobijate 35% bonusa preko mog linka",
     logo: "https://static.totalcsgo.com/small_logo_f9dc26c029.png",
     url: "https://pirateswap.com/?ref=ljaf",
     gradient: "from-purple-500/30 via-pink-500/20 to-purple-500/10",
@@ -157,9 +161,14 @@ function PartnersSection() {
               </motion.div>
               
               {/* Partner Name */}
-              <h3 className="text-2xl font-black text-white mb-3 tracking-tight">
+              <h3 className="text-2xl font-black text-white mb-2 tracking-tight">
                 {partner.name}
               </h3>
+              
+              {/* Partner Description */}
+              <p className="text-sm text-gray-300/90 mb-4 font-medium">
+                {partner.description}
+              </p>
 
               {/* Visit Button */}
               <motion.div
