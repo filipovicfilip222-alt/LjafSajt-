@@ -71,6 +71,17 @@ export const metadata: Metadata = {
     description: "Content Creator & Streamer",
     images: ["https://ljaf.rs/ljaflogo.jpg"],
   },
+  icons: {
+    icon: [
+      { rel: "icon", url: "/favicon.ico" },
+      { rel: "icon", url: "/icon.png" },
+      { rel: "icon", url: "/icon-192.png" },
+      { rel: "icon", url: "/icon-512.png" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
+  manifest: "/manifest.webmanifest",
   metadataBase: new URL("https://ljaf.rs"),
   verification: {
     google: "YOUR_GOOGLE_VERIFICATION_CODE", // Dodaj Google Search Console verification code ovde
