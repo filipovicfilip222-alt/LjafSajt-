@@ -3,7 +3,6 @@
 import { motion } from "framer-motion";
 import { 
   Sparkles,
-  Users,
   Star
 } from "lucide-react";
 import Image from "next/image";
@@ -11,6 +10,7 @@ import { useEffect, useState } from "react";
 import SocialCard from "@/components/SocialCard";
 import AnimatedBackground from "@/components/AnimatedBackground";
 import PartnersSection from "@/components/PartnersSection";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   const [isMobile, setIsMobile] = useState(false);
@@ -293,18 +293,8 @@ export default function Home() {
           </motion.div>
         </motion.div>
 
-        {/* Footer */}
-        <motion.footer 
-          className="text-center mt-12 md:mt-16 text-gray-500 text-sm"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1, duration: 0.8 }}
-        >
-          <p className="flex items-center justify-center gap-2">
-            <Users className="w-4 h-4" />
-            © 2026 Veljko Karanović Ljaf. Sva prava zadržana.
-          </p>
-        </motion.footer>
+        {/* Footer with Backlink */}
+        <Footer />
       </div>
     </main>
   );
