@@ -69,7 +69,7 @@ function Footer() {
           >
             <div className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-cyan-500/10 border border-white/10 backdrop-blur-xl">
               <Code className="w-4 h-4 text-purple-400" />
-              <span className="text-sm text-gray-400">Sajt izradio</span>
+              <span className="text-sm text-white">Sajt izradio</span>
               <Sparkles className="w-3 h-3 text-pink-400" />
             </div>
             
@@ -100,14 +100,14 @@ function Footer() {
                 transition={glowTransition}
               />
 
-              <span className="relative text-lg md:text-xl font-bold bg-gradient-to-r from-purple-300 via-pink-300 to-cyan-300 bg-clip-text text-transparent">
+              <span className="relative text-lg md:text-xl font-bold text-white">
                 AiSajt.com
               </span>
               
               <ExternalLink className="relative w-5 h-5 text-purple-400 group-hover:text-pink-400 transition-colors" />
             </motion.a>
 
-            <p className="text-sm text-gray-500 max-w-md">
+            <p className="text-sm text-white max-w-md">
               Profesionalna izrada web sajtova sa AI tehnologijom
             </p>
           </motion.div>
