@@ -80,7 +80,7 @@ body {
   50% { transform: translateY(-20px); }
 }
 
-/* Among Us fly across animation - GPU accelerated */
+/* Among Us fly across animation - DESKTOP */
 @keyframes fly-across {
   0% {
     transform: translateX(-100px) rotate(0deg);
@@ -94,6 +94,24 @@ body {
   }
   100% {
     transform: translateX(calc(100vw + 100px)) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+/* Among Us fly across animation - MOBILE (sporije, manje rotacije) */
+@keyframes fly-across-mobile {
+  0% {
+    transform: translateX(-60px) rotate(0deg);
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(calc(100vw + 60px)) rotate(360deg);
     opacity: 0;
   }
 }

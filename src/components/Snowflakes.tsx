@@ -38,13 +38,13 @@ export default function Snowflakes() {
     setPreloadedImages(images);
   }, []);
 
-  // Among Us pojavljuje se svakih 7 sekundi i leti preko ekrana
+  // Among Us pojavljuje se i leti preko ekrana
   const showAmongus = useCallback(() => {
     const randomImage = amongusImages[Math.floor(Math.random() * amongusImages.length)];
     const randomY = 10 + Math.random() * 70; // 10-80% vertikalno
     const size = 40 + Math.random() * 30; // 40-70px
-    // Na mobilnom traje MNOGO duže (12s) da bude sporije, na desktopu 5s
-    const animationDuration = isMobile ? 12000 : 5000;
+    // Na mobilnom 20 sekundi, na desktopu 5 sekundi
+    const animationDuration = isMobile ? 20000 : 5000;
 
     setAmongusVisible({
       id: Date.now(),
@@ -118,7 +118,7 @@ export default function Snowflakes() {
             height: `${amongusVisible.size}px`,
             pointerEvents: "none",
             userSelect: "none",
-            animation: `fly-across ${amongusVisible.animationDuration / 1000}s linear forwards`,
+            animation: `${isMobile ? 'fly-across-mobile' : 'fly-across'} ${amongusVisible.animationDuration / 1000}s linear forwards`,
           }}
           draggable={false}
         />
