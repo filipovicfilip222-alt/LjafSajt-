@@ -98,24 +98,6 @@ body {
   }
 }
 
-/* Among Us fly across animation - MOBILE (sporije, manje rotacije) */
-@keyframes fly-across-mobile {
-  0% {
-    transform: translateX(-60px) rotate(0deg);
-    opacity: 0;
-  }
-  5% {
-    opacity: 1;
-  }
-  95% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(calc(100vw + 60px)) rotate(360deg);
-    opacity: 0;
-  }
-}
-
 .animate-fly-across {
   left: 0;
   animation: fly-across 5s linear forwards;

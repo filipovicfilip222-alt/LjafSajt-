@@ -105,8 +105,8 @@ export default function Snowflakes() {
         />
       ))}
 
-      {/* Among Us koji leti sa leva na desno - CSS animacija (GPU accelerated) */}
-      {amongusVisible && (
+      {/* Among Us koji leti sa leva na desno - samo na desktopu */}
+      {!isMobile && amongusVisible && (
         <img
           key={amongusVisible.id}
           src={amongusVisible.image}
@@ -118,7 +118,7 @@ export default function Snowflakes() {
             height: `${amongusVisible.size}px`,
             pointerEvents: "none",
             userSelect: "none",
-            animation: `${isMobile ? 'fly-across-mobile' : 'fly-across'} ${amongusVisible.animationDuration / 1000}s linear forwards`,
+            animation: `fly-across ${amongusVisible.animationDuration / 1000}s linear forwards`,
           }}
           draggable={false}
         />
