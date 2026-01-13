@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useEffect, useState, useCallback } from "react";
+import { useMobile } from "@/hooks/useMobile";
 
 const amongusImages = [
   "/amonguscovek1.png",
@@ -16,7 +17,7 @@ const preloadImages = () => {
 };
 
 export default function Snowflakes() {
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useMobile();
   const [preloadedImages, setPreloadedImages] = useState<HTMLImageElement[]>([]);
   const [amongusVisible, setAmongusVisible] = useState<{
     id: number;
@@ -25,15 +26,6 @@ export default function Snowflakes() {
     size: number;
     animationDuration: number;
   } | null>(null);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.matchMedia("(max-width: 768px)").matches);
-    };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
 
   // Preload slike na startup
   useEffect(() => {
@@ -51,8 +43,8 @@ export default function Snowflakes() {
     const randomImage = amongusImages[Math.floor(Math.random() * amongusImages.length)];
     const randomY = 10 + Math.random() * 70; // 10-80% vertikalno
     const size = 40 + Math.random() * 30; // 40-70px
-    // Na mobilnom traje duže (8s) da bude sporije, na desktopu 5s
-    const animationDuration = isMobile ? 8000 : 5000;
+    // Na mobilnom traje MNOGO duže (12s) da bude sporije, na desktopu 5s
+    const animationDuration = isMobile ? 12000 : 5000;
 
     setAmongusVisible({
       id: Date.now(),
@@ -69,10 +61,16 @@ export default function Snowflakes() {
   }, [isMobile]);
 
   useEffect(() => {
-    // Among Us se pojavljuje svakih 7 sekundi
-    const interval = setInterval(showAmongus, 7000);
+    // Čekaj 2 sekunde pre prve animacije da se useMobile stabilizuje
+    const initialDelay = setTimeout(() => {
+      showAmongus();
+    }, 2000);
+    
+    // Among Us se pojavljuje svakih 10 sekundi (duži interval)
+    const interval = setInterval(showAmongus, 10000);
 
     return () => {
+      clearTimeout(initialDelay);
       clearInterval(interval);
     };
   }, [showAmongus]);
