@@ -1,161 +1,184 @@
 "use client";
 
-import { useEffect, useState, useCallback, useRef, memo } from "react";
+import { useEffect, useState, useRef, memo } from "react";
 import { useMobile } from "@/hooks/useMobile";
 
 // Putanje do slika
 const AMONGUS_IMAGES = ["/amonguscovek1.png", "/amonguscovek2.png"] as const;
 
-// Konfiguracija animacije - razumna trajanja da ne bude previše brzo ili sporo
+// Konfiguracija animacije
 const CONFIG = {
-  // Trajanje leta preko ekrana (u ms) - 8-12 sekundi je optimalno za mobilni
+  // Trajanje leta preko ekrana (u ms) - 8-12 sekundi
   minDuration: 8000,
   maxDuration: 12000,
-  // Interval između pojava (u ms) - 15-25 sekundi da ne bude previše često
+  // Interval između pojava (u ms)
   minInterval: 15000,
   maxInterval: 25000,
   // Inicijalno kašnjenje pre prvog pojavljivanja (u ms)
   initialDelay: 3000,
-  // Veličina Among Us-a (u px)
-  minSize: 35,
-  maxSize: 55,
+  // Veličina Among Us-a (u px) - veće da se jasno vidi
+  minSize: 60,
+  maxSize: 90,
 } as const;
 
-// Globalni keš za preload-ovane slike - čuva se između renderovanja
-const imageCache = new Map<string, HTMLImageElement>();
-let imagesPreloaded = false;
-
-// Preload funkcija - izvršava se jednom i kešira slike u memoriji
-function preloadImages(): Promise<void> {
-  if (imagesPreloaded) return Promise.resolve();
-  
-  const promises = AMONGUS_IMAGES.map((src) => {
-    return new Promise<void>((resolve) => {
-      if (imageCache.has(src)) {
-        resolve();
-        return;
-      }
-      
-      const img = new Image();
-      img.onload = () => {
-        imageCache.set(src, img);
-        resolve();
-      };
-      img.onerror = () => resolve(); // Ne blokiraj ako slika ne uspe
-      img.src = src;
-    });
-  });
-  
-  return Promise.all(promises).then(() => {
-    imagesPreloaded = true;
+// Preload slike jednom globalno
+if (typeof window !== "undefined") {
+  AMONGUS_IMAGES.forEach((src) => {
+    const img = new Image();
+    img.src = src;
   });
 }
 
 interface FlyingAmongusData {
-  id: number;
+  id: string;
   imageSrc: string;
-  y: number; // vertikalna pozicija (%)
-  size: number; // veličina (px)
-  duration: number; // trajanje animacije (ms)
+  y: number;
+  size: number;
+  duration: number;
+  startTime: number;
+}
+
+// Komponenta koja koristi requestAnimationFrame umesto CSS animacije
+function FlyingAmongusImage({ data, onComplete }: { data: FlyingAmongusData; onComplete: () => void }) {
+  const imgRef = useRef<HTMLImageElement>(null);
+  const frameRef = useRef<number>(0);
+  
+  useEffect(() => {
+    const startTime = performance.now();
+    const duration = data.duration;
+    const screenWidth = window.innerWidth;
+    const startX = -80;
+    const endX = screenWidth + 80;
+    const totalDistance = endX - startX;
+    
+    const animate = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // Linearno pomeranje od leva na desno
+      const currentX = startX + (totalDistance * progress);
+      
+      // Opacity: fade in prvih 10%, fade out poslednjih 10%
+      let opacity = 1;
+      if (progress < 0.1) {
+        opacity = progress / 0.1;
+      } else if (progress > 0.9) {
+        opacity = (1 - progress) / 0.1;
+      }
+      
+      // Rotacija 720 stepeni ulevo (negativno = ulevo)
+      const rotation = -720 * progress;
+      
+      if (imgRef.current) {
+        imgRef.current.style.transform = `translateX(${currentX}px) rotate(${rotation}deg)`;
+        imgRef.current.style.opacity = String(opacity);
+      }
+      
+      if (progress < 1) {
+        frameRef.current = requestAnimationFrame(animate);
+      } else {
+        onComplete();
+      }
+    };
+    
+    frameRef.current = requestAnimationFrame(animate);
+    
+    return () => {
+      if (frameRef.current) {
+        cancelAnimationFrame(frameRef.current);
+      }
+    };
+  }, [data, onComplete]);
+  
+  return (
+    <img
+      ref={imgRef}
+      src={data.imageSrc}
+      alt=""
+      draggable={false}
+      style={{
+        position: 'absolute',
+        top: `${data.y}%`,
+        left: 0,
+        width: `${data.size}px`,
+        height: 'auto',
+        objectFit: 'contain',
+        imageRendering: 'auto',
+        opacity: 0,
+        pointerEvents: 'none',
+        userSelect: 'none',
+        willChange: 'transform, opacity',
+      }}
+    />
+  );
 }
 
 function FlyingAmongus() {
   const isMobile = useMobile();
   const [current, setCurrent] = useState<FlyingAmongusData | null>(null);
+  const mountedRef = useRef(true);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const animationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Pomocna funkcija za random broj u opsegu
-  const randomBetween = useCallback((min: number, max: number) => {
-    return min + Math.random() * (max - min);
-  }, []);
-
-  // Generiše podatke za novu animaciju
-  const generateAmongusData = useCallback((): FlyingAmongusData => {
-    const randomImageIndex = Math.floor(Math.random() * AMONGUS_IMAGES.length);
-    return {
-      id: Date.now() + Math.random(), // Jedinstveni ID
-      imageSrc: AMONGUS_IMAGES[randomImageIndex],
-      y: randomBetween(15, 75), // 15-75% od vrha ekrana
-      size: Math.floor(randomBetween(CONFIG.minSize, CONFIG.maxSize)),
-      duration: Math.floor(randomBetween(CONFIG.minDuration, CONFIG.maxDuration)),
-    };
-  }, [randomBetween]);
-
-  // Pokreće animaciju
-  const triggerAnimation = useCallback(() => {
-    const data = generateAmongusData();
-    setCurrent(data);
-
-    // Očisti prethodni timeout ako postoji
-    if (animationTimeoutRef.current) {
-      clearTimeout(animationTimeoutRef.current);
-    }
-
-    // Sakrij nakon završetka animacije
-    animationTimeoutRef.current = setTimeout(() => {
-      setCurrent(null);
-    }, data.duration + 500); // Mali buffer za sigurnost
-  }, [generateAmongusData]);
-
-  // Zakazuje sledeću animaciju
-  const scheduleNext = useCallback(() => {
-    const interval = randomBetween(CONFIG.minInterval, CONFIG.maxInterval);
-    timeoutRef.current = setTimeout(() => {
-      triggerAnimation();
-      scheduleNext(); // Rekurzivno zakazuj sledeću
-    }, interval);
-  }, [triggerAnimation, randomBetween]);
 
   useEffect(() => {
-    // Ova komponenta radi SAMO na mobilnim uređajima
+    mountedRef.current = true;
+    
+    // Samo na mobilnom
     if (!isMobile) {
       setCurrent(null);
       return;
     }
 
-    // Preload slike pre početka animacija
-    preloadImages().then(() => {
-      // Pokreni prvu animaciju nakon inicijalnog kašnjenja
+    const createAmongus = (): FlyingAmongusData => {
+      const duration = CONFIG.minDuration + Math.random() * (CONFIG.maxDuration - CONFIG.minDuration);
+      return {
+        id: `amongus-${Date.now()}`,
+        imageSrc: AMONGUS_IMAGES[Math.floor(Math.random() * AMONGUS_IMAGES.length)],
+        y: 15 + Math.random() * 60,
+        size: CONFIG.minSize + Math.random() * (CONFIG.maxSize - CONFIG.minSize),
+        duration: Math.round(duration),
+        startTime: Date.now(),
+      };
+    };
+
+    const showAmongus = () => {
+      if (!mountedRef.current) return;
+      setCurrent(createAmongus());
+    };
+
+    const scheduleNext = () => {
+      const interval = CONFIG.minInterval + Math.random() * (CONFIG.maxInterval - CONFIG.minInterval);
       timeoutRef.current = setTimeout(() => {
-        triggerAnimation();
+        showAmongus();
         scheduleNext();
-      }, CONFIG.initialDelay);
-    });
+      }, interval);
+    };
+
+    // Pokreni prvu animaciju
+    const initialTimeout = setTimeout(() => {
+      showAmongus();
+      scheduleNext();
+    }, CONFIG.initialDelay);
 
     return () => {
+      mountedRef.current = false;
+      clearTimeout(initialTimeout);
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
-      if (animationTimeoutRef.current) {
-        clearTimeout(animationTimeoutRef.current);
-      }
     };
-  }, [isMobile, triggerAnimation, scheduleNext]);
+  }, [isMobile]);
 
-  // Ne renderuj ništa na desktopu ili ako nema aktivne animacije
+  const handleComplete = () => {
+    setCurrent(null);
+  };
+
   if (!isMobile || !current) {
     return null;
   }
 
   return (
-    <div 
-      className="fixed inset-0 overflow-hidden pointer-events-none z-50"
-      aria-hidden="true"
-    >
-      <img
-        key={current.id}
-        src={current.imageSrc}
-        alt=""
-        draggable={false}
-        className="absolute select-none amongus-fly-mobile"
-        style={{
-          top: `${current.y}%`,
-          width: `${current.size}px`,
-          height: `${current.size}px`,
-          animationDuration: `${current.duration / 1000}s`,
-        }}
-      />
+    <div className="fixed inset-0 overflow-hidden pointer-events-none z-50" aria-hidden="true">
+      <FlyingAmongusImage key={current.id} data={current} onComplete={handleComplete} />
     </div>
   );
 }
