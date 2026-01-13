@@ -10,7 +10,6 @@ import { useMemo } from "react";
 import SocialCard from "@/components/SocialCard";
 import AnimatedBackground from "@/components/AnimatedBackground";
 import PartnersSection from "@/components/PartnersSection";
-import Footer from "@/components/Footer";
 import { useMobile } from "@/hooks/useMobile";
 
 // Static animation configs - prevents recreation on every render
@@ -218,9 +217,34 @@ export default function Home() {
           </motion.div>
         </motion.div>
 
-        {/* Footer with Backlink */}
-        <Footer />
+        {/* Copyright & Creator Credit */}
+        <motion.footer 
+          className="mt-16 md:mt-24 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8 }}
+        >
+          <p className="text-base text-gray-300 font-medium">
+            © {new Date().getFullYear()} Veljko Karanović Ljaf. Sva prava zadržana.
+          </p>
+          <p className="text-base text-gray-300 font-medium">
+            Izrada i dizajn:{" "}
+            <a 
+              href="https://aisajt.com" 
+              target="_blank" 
+              rel="noopener author"
+              className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 hover:opacity-80 transition-opacity"
+              title="Profesionalna izrada web sajtova - AiSajt.com"
+            >
+              AiSajt
+            </a>
+          </p>
+        </motion.footer>
       </div>
+
+      {/* SEO Hidden Links - Pomoć Google crawleru */}
+      <link rel="preconnect" href="https://aisajt.com" />
+      <link rel="dns-prefetch" href="https://aisajt.com" />
     </main>
   );
 }

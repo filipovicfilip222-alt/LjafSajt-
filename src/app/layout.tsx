@@ -13,9 +13,11 @@ const spaceGrotesk = Space_Grotesk({
 
 export const metadata: Metadata = {
   title: "Ljaf - Veljko Karanović | Content Creator & Streamer",
-  description: "Zvanična stranica Veljka Karanovića - Ljaf. Pratite moj sadržaj na društvenim mrežama i pridružite se zajednici! Gaming, live streaming, entertainment i zabava.",
+  description: "Zvanična stranica Veljka Karanovića - Ljaf. Pratite moj sadržaj na društvenim mrežama i pridružite se zajednici! Gaming, live streaming, entertainment i zabava. Sajt izradio AiSajt.com - profesionalna izrada web sajtova.",
   keywords: [
     "Ljaf",
+    "ljaf.rs",
+    "ljaf sajt",
     "Veljko Karanović",
     "ljatif",
     "streamer",
@@ -32,9 +34,15 @@ export const metadata: Metadata = {
     "gaming srpski",
     "online entertainment",
     "streaming platform",
+    "AiSajt",
+    "izrada web sajtova",
+    "web development",
   ],
-  authors: [{ name: "Veljko Karanović Ljaf" }],
-  creator: "Veljko Karanović",
+  authors: [
+    { name: "Veljko Karanović Ljaf" },
+    { name: "AiSajt.com", url: "https://aisajt.com" }
+  ],
+  creator: "AiSajt.com",
   publisher: "Veljko Karanović Ljaf",
   robots: {
     index: true,
@@ -58,9 +66,9 @@ export const metadata: Metadata = {
     url: "https://ljaf.rs",
     images: [
       {
-        url: "https://ljaf.rs/ljaflogo.jpg",
-        width: 1200,
-        height: 630,
+        url: "https://ljaf.rs/icon-512.png",
+        width: 512,
+        height: 512,
         alt: "Ljaf - Veljko Karanović",
       },
     ],
@@ -69,7 +77,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Ljaf - Veljko Karanović",
     description: "Content Creator & Streamer",
-    images: ["https://ljaf.rs/ljaflogo.jpg"],
+    images: ["https://ljaf.rs/icon-512.png"],
   },
   icons: {
     icon: [
@@ -84,7 +92,7 @@ export const metadata: Metadata = {
   manifest: "/manifest.webmanifest",
   metadataBase: new URL("https://ljaf.rs"),
   verification: {
-    google: "YOUR_GOOGLE_VERIFICATION_CODE", // Dodaj Google Search Console verification code ovde
+    google: "", // Vercel automatski upravlja verifikacijom
   },
 };
 
@@ -116,12 +124,37 @@ export default function RootLayout({
     ],
   };
 
+  const creatorData = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Ljaf - Veljko Karanović",
+    url: "https://ljaf.rs",
+    author: {
+      "@type": "Organization",
+      name: "AiSajt.com",
+      url: "https://aisajt.com",
+      description: "Profesionalna izrada web sajtova sa AI tehnologijom",
+      sameAs: ["https://aisajt.com"]
+    },
+    creator: {
+      "@type": "Organization",
+      name: "AiSajt.com",
+      url: "https://aisajt.com"
+    }
+  };
+
   return (
     <html lang="sr">
       <head>
+        <link rel="preconnect" href="https://aisajt.com" />
+        <link rel="dns-prefetch" href="https://aisajt.com" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(creatorData) }}
         />
       </head>
       <body className={`${spaceGrotesk.variable} font-sans antialiased`}>

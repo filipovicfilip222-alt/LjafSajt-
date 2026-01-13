@@ -7,13 +7,23 @@ const amongusImages = [
   "/amonguscovek2.png",
 ];
 
+// Preload slike na početku - one se keširaju u memoriji
+const preloadImages = () => {
+  amongusImages.forEach((src) => {
+    const img = new Image();
+    img.src = src;
+  });
+};
+
 export default function Snowflakes() {
   const [isMobile, setIsMobile] = useState(false);
+  const [preloadedImages, setPreloadedImages] = useState<HTMLImageElement[]>([]);
   const [amongusVisible, setAmongusVisible] = useState<{
     id: number;
     image: string;
     y: number;
     size: number;
+    animationDuration: number;
   } | null>(null);
 
   useEffect(() => {
@@ -25,24 +35,38 @@ export default function Snowflakes() {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
+  // Preload slike na startup
+  useEffect(() => {
+    preloadImages();
+    const images = amongusImages.map((src) => {
+      const img = new Image();
+      img.src = src;
+      return img;
+    });
+    setPreloadedImages(images);
+  }, []);
+
   // Among Us pojavljuje se svakih 7 sekundi i leti preko ekrana
   const showAmongus = useCallback(() => {
     const randomImage = amongusImages[Math.floor(Math.random() * amongusImages.length)];
     const randomY = 10 + Math.random() * 70; // 10-80% vertikalno
     const size = 40 + Math.random() * 30; // 40-70px
+    // Na mobilnom traje duže (8s) da bude sporije, na desktopu 5s
+    const animationDuration = isMobile ? 8000 : 5000;
 
     setAmongusVisible({
       id: Date.now(),
       image: randomImage,
       y: randomY,
       size: size,
+      animationDuration: animationDuration,
     });
 
-    // Sakrij nakon 5 sekundi (koliko traje animacija)
+    // Sakrij nakon što animacija završi
     setTimeout(() => {
       setAmongusVisible(null);
-    }, 5000);
-  }, []);
+    }, animationDuration);
+  }, [isMobile]);
 
   useEffect(() => {
     // Among Us se pojavljuje svakih 7 sekundi
@@ -89,13 +113,14 @@ export default function Snowflakes() {
           key={amongusVisible.id}
           src={amongusVisible.image}
           alt=""
-          className="absolute select-none animate-fly-across"
+          className="absolute select-none"
           style={{
             top: `${amongusVisible.y}%`,
             width: `${amongusVisible.size}px`,
             height: `${amongusVisible.size}px`,
             pointerEvents: "none",
             userSelect: "none",
+            animation: `fly-across ${amongusVisible.animationDuration / 1000}s linear forwards`,
           }}
           draggable={false}
         />
