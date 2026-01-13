@@ -10,6 +10,7 @@ import { useMemo } from "react";
 import SocialCard from "@/components/SocialCard";
 import AnimatedBackground from "@/components/AnimatedBackground";
 import PartnersSection from "@/components/PartnersSection";
+import FlyingAmongus from "@/components/FlyingAmongus";
 import { useMobile } from "@/hooks/useMobile";
 
 // Static animation configs - prevents recreation on every render
@@ -85,6 +86,7 @@ export default function Home() {
   return (
     <main className="relative min-h-screen noise-bg">
       <AnimatedBackground />
+      <FlyingAmongus />
       
       {/* Main Container */}
       <div className="relative z-10 container mx-auto px-4 py-8 md:py-12 max-w-6xl">

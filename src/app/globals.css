@@ -103,6 +103,46 @@ body {
   animation: fly-across 5s linear forwards;
 }
 
+/* Among Us fly across animation - MOBILE ONLY */
+@keyframes fly-across-mobile {
+  0% {
+    left: -60px;
+    transform: rotate(-15deg) scale(0.8);
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+    transform: rotate(-10deg) scale(1);
+  }
+  25% {
+    transform: rotate(5deg) translateY(-8px) scale(1.05);
+  }
+  50% {
+    transform: rotate(-5deg) translateY(5px) scale(0.95);
+  }
+  75% {
+    transform: rotate(8deg) translateY(-5px) scale(1.02);
+  }
+  95% {
+    opacity: 1;
+    transform: rotate(-3deg) scale(1);
+  }
+  100% {
+    left: calc(100vw + 60px);
+    transform: rotate(15deg) scale(0.8);
+    opacity: 0;
+  }
+}
+
+.amongus-fly-mobile {
+  left: -60px;
+  animation-name: fly-across-mobile;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+  /* animation-duration se postavlja inline putem style prop */
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+}
+
 /* Performance containment for expensive elements */
 .fixed {
   contain: layout style paint;
