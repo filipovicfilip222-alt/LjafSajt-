@@ -81,13 +81,20 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { rel: "icon", url: "/favicon.ico" },
-      { rel: "icon", url: "/icon.png" },
-      { rel: "icon", url: "/icon-192.png" },
-      { rel: "icon", url: "/icon-512.png" },
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
     ],
     shortcut: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+    other: [
+      {
+        rel: "mask-icon",
+        url: "/fallback-logo.svg",
+      },
+    ],
   },
   manifest: "/manifest.webmanifest",
   metadataBase: new URL("https://ljaf.rs"),
